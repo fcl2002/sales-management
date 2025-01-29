@@ -1,14 +1,3 @@
-1. Planejamento e Configuração Inicial
-Tarefas:
-Configurar o ambiente de desenvolvimento:
-Instalar dependências do projeto (Node.js, NestJS, TypeORM ou Prisma, etc.).
-Configurar o banco de dados (PostgreSQL ou outro escolhido).
-Estruturar o repositório do código:
-Configurar padrões de código (ESLint, Prettier).
-Configurar controle de versão (Git/GitHub/GitLab).
-Criar os diretórios principais do projeto:
-src/modules (para módulos como auth, users, etc.).
-Configurar arquivos de ambiente (.env) para variáveis sensíveis.
 2. Banco de Dados e Modelagem
 Tarefas:
 Criar o esquema inicial do banco de dados:
@@ -69,26 +58,5 @@ Banco de dados configurado e preparado para as próximas fases.
 Uma interface inicial simples que valida o login e exibe uma tela baseada no tipo de usuário.
 Se precisar de ajuda para implementar uma das tarefas ou mais detalhes sobre qualquer ponto, posso ajudar a detalhar ainda mais!
 
-$ npm install @nestjs/cli
-$ nest new backend
 
-$ npm install prisma --save-dev
-$ npx prisma init
-
-$ npm install @prisma/client
-$ npx prisma migrate dev --name init
-$ npx prisma generate
-
-#### Autenticação
-
-npm i @nestjs/jwt @nestjs/passport passport-jwt bcrypt
-npm i -D @types/passport-jwt
-
-#### Lib para validação
-$ npm i class-validator class-transformer
-
-#### Comando para gerar uma chave de 32 bits
-$ openssl rand -hex 32
-
-$ npm i @nestjs/config
 
