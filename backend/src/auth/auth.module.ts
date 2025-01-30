@@ -8,6 +8,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import jwtConfig from './config/jwt.config';
 import { ConfigModule } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
+import { LocalStrategy } from './strategies/local.strategy';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { UserService } from 'src/user/user.service';
       }),
     }),
     ConfigModule.forFeature(jwtConfig),
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -28,6 +31,8 @@ import { UserService } from 'src/user/user.service';
     AuthService, 
     PrismaService, 
     JwtStrategy,
+    LocalStrategy,
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}

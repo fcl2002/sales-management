@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Request, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { Public } from './decorators/public.decorator';
+import { LocalAuthGuard } from './guards/local.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -9,10 +10,9 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() body: { email: string, password: string}) {
-    const user = await this.authService.validateUser(body.email, body.password);
-    const token = await this.authService.login(user.id);
-    return { id: user.id, token };
+  async login(@Request() request) {
+    return this.authService.login(request.user.id);
   }
 }

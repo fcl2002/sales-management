@@ -125,8 +125,8 @@ $ npx prisma migrate dev --name init
 $ npx prisma generate
 
 # Dependências para autenticação com JWT e Passport
-$ npm i @nestjs/jwt @nestjs/passport passport-jwt bcrypt
-$ npm i -D @types/passport-jwt
+$ npm i @nestjs/jwt @nestjs/passport passport-jwt bcrypt passport-local
+$ npm i -D @types/passport-jwt @types/passport-local
 
 # Biblioteca para validação
 $ npm i class-validator class-transformer
@@ -170,14 +170,15 @@ npm run start
 
 | Método  | Rota                     | Descrição                                  |
 |---------|--------------------------|--------------------------------------------|
-| `POST`  | `/auth/login`            | Autenticação do usuário                   |
-| `POST`  | `/auth/register`         | Cadastro de novo usuário                  |
-| `GET`   | `/products`              | Listar todos os produtos                  |
-| `POST`  | `/products`              | Criar um novo produto                     |
-| `PUT`   | `/products/:id`          | Atualizar um produto                      |
-| `DELETE`| `/products/:id`          | Deletar um produto                        |
-| `POST`  | `/sales`                 | Registrar uma venda                       |
-| `GET`   | `/reports/sales`         | Gerar relatório de vendas                 |
+| `POST`  | `/users`              | Criar um novo usuário                     |
+| `GET`   | `/users`              | Listar todos os usuários                  |
+| `GET`   | `/users/me`              | Rota para o usuário buscar detalhes de seu próprio perfil específico                  |
+| `GET`   | `/users/:id`              | Buscar detalhes de um usuário específico                  |
+| `PATCH`   | `/users/:id`          | Atualizar um usuário                      |
+| `DELETE`| `/users/:id`          | Deletar um produto                        |
+| `POST`  | `/auth/login`            | Autenticação de usuários cadastrados                   |
+| `POST`  | `/auth/forgot-password`            | Rota para o usuário redefinir a senha                   |
+| `PATCH`  | `/auth/change-password`            | Rota para o usuário alterar a senha                   |
 
 ## 🛠️ Deploy na DigitalOcean
 

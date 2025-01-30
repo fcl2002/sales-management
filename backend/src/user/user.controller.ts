@@ -9,7 +9,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { UserResponseDto } from './dto/response-user.dto';
 
 @Roles(Role.USER)
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(
     private readonly userService: UserService
@@ -23,16 +23,16 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-  @Get("profile")
-  @UseGuards(JwtAuthGuard)
-  async getProfile(@Req() req): Promise<UserResponseDto> {
-    return this.userService.findOne(req.user.id);
-  }
-
   @Get()
   @Roles(Role.ADMIN)
   async getAllUsers(): Promise<UserResponseDto[]> {
     return this.userService.findAllUsers();
+  }
+
+  @Get("me")
+  @UseGuards(JwtAuthGuard)
+  async getProfile(@Req() req): Promise<UserResponseDto> {
+    return this.userService.findOne(req.user.id);
   }
 
   @Get(':id')

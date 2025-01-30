@@ -61,7 +61,13 @@ export class UserService {
   async findUserById(id: number): Promise<UserResponseDto> {
     return this.findOne(id);
   }
-
+  
+  async findByEmail(email: string) {
+    return await this.prisma.user.findUnique({
+      where: { email },
+    });
+  }
+  
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
     this.logger.log(`[UserService] Atualizando usuário com ID ${id}`);
 
