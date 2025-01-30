@@ -12,6 +12,13 @@ export class UserService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  async updateHashedRefreshToken(userId: number, hashedRefreshToken: string) {
+    return await this.prisma.user.update({ 
+      where: { id: userId }, 
+      data:  { hashedRefreshToken: hashedRefreshToken },
+    });
+  }
+
   async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     this.logger.log('[UserService] Criando um novo usuário...')
     
@@ -20,7 +27,7 @@ export class UserService {
 
     const emailExists = await this.prisma.user.findUnique({ where: { email }});
     if (emailExists) {
-      this.logger.warn(`[UserService] Tentativa de criar usuário com email já existente: ${email}`);
+      this.logger.warn(`[UserService] Tentativa de criar um usuário com email já existente: ${email}`);
       throw new ConflictException('Este email já está em uso!');
     }
 
@@ -32,12 +39,12 @@ export class UserService {
     return plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true });
   }
 
-  async findOne(id: number): Promise<UserResponseDto> {
+  async findOne(id: number) {
     this.logger.log(`[UserService] Buscando usuário com ID ${id}`);
 
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: { id: true, name: true, email: true, role: true },
+      select: { name: true, email: true, role: true, hashedRefreshToken: true },
     });
 
     if (!user) {
@@ -45,7 +52,7 @@ export class UserService {
       throw new NotFoundException('Usuário não encontrado.');
     }
 
-    return plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true });
+    return user;
   }
 
   async findAllUsers(): Promise<UserResponseDto[]> {
@@ -56,10 +63,6 @@ export class UserService {
     });
 
     return users.map((user) => plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true }));
-  }
-
-  async findUserById(id: number): Promise<UserResponseDto> {
-    return this.findOne(id);
   }
   
   async findByEmail(email: string) {

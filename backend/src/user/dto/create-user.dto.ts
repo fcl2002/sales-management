@@ -16,6 +16,6 @@ export class CreateUserDto {
   password: string;
 
   @IsEnum(Role, { message: 'O papel do usuário deve ser "user" ou "admin".' })
-  @IsOptional() // Opcional, assume "user" como padrão
+  @IsOptional()
   role?: Role;
 }

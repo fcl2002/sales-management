@@ -11,6 +11,6 @@ export class UserResponseDto {
   @Expose()
   role: Role;
 
-  @Exclude() // Garante que outros campos não sejam retornados
+  @Exclude()
   password?: string;
 }

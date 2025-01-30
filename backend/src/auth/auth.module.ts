@@ -10,20 +10,16 @@ import { ConfigModule } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UserModule } from 'src/user/user.module';
+import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
+import refreshJwtConfig from './config/refresh-jwt.config';
+import { RefreshJwtGuard } from './guards/refresh-jwt.guard';
 
 @Module({
   imports: [
     PassportModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule.forFeature(jwtConfig)],
-      inject: [jwtConfig.KEY],
-      useFactory: (config) => ({
-        secret: config.secret,
-        signOptions: {expiresIn: config.signOptions.expiresIn },
-      }),
-    }),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
-    UserModule,
+    ConfigModule.forFeature(refreshJwtConfig),
   ],
   controllers: [AuthController],
   providers: [
@@ -32,6 +28,8 @@ import { UserModule } from 'src/user/user.module';
     PrismaService, 
     JwtStrategy,
     LocalStrategy,
+    RefreshJwtStrategy,
+    RefreshJwtGuard,
   ],
   exports: [AuthService],
 })

@@ -26,7 +26,7 @@
 ## 📌 Requisitos Não Funcionais
 
 - [x] RNF01: O sistema deve utilizar JWT (JSON Web Token) para autenticação, garantindo um mecanismo seguro e escalável de controle de acesso.
-- [x] RNF02: O JWT deve conter informações essenciais, como ID do usuário, cargo (role) e data de expiração, e deve ser assinado com uma chave secreta para evitar falsificações.
+- [ ] RNF02: O JWT deve conter informações essenciais, como ID do usuário, cargo (role) e data de expiração, e deve ser assinado com uma chave secreta para evitar falsificações.
 - [x] RNF03: O sistema deve exigir um token válido para acessar rotas protegidas, retornando erro 401 (Unauthorized) em caso de credenciais inválidas ou expiradas.
 - [x] RNF04: O tempo de expiração do JWT deve ser configurável, permitindo ajustes conforme as necessidades de segurança da aplicação.
 - [ ] RNF05: O sistema deve suportar refresh tokens, permitindo que usuários renovem sua autenticação sem precisar fazer login novamente com frequência excessiva.

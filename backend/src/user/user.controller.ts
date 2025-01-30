@@ -31,13 +31,13 @@ export class UserController {
 
   @Get("me")
   @UseGuards(JwtAuthGuard)
-  async getProfile(@Req() req): Promise<UserResponseDto> {
+  async getProfile(@Req() req) {
     return this.userService.findOne(req.user.id);
   }
 
   @Get(':id')
   @Roles(Role.ADMIN)
-  async getUserById(@Param('id', ParseIntPipe) id: number): Promise<UserResponseDto> {
+  async getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
