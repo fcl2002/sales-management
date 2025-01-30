@@ -1,13 +1,3 @@
-2. Banco de Dados e Modelagem
-Tarefas:
-Criar o esquema inicial do banco de dados:
-Tabelas:
-Usuários (users):
-ID (PK), nome, email, senha (criptografada), tipo de usuário (admin ou user), timestamps.
-Permissões (permissions):
-Relacionamento entre usuários e permissões específicas.
-Configurar migrações:
-Criar scripts de migração para o banco de dados (usando TypeORM ou Prisma).
 3. Desenvolvimento do Backend
 Tarefas:
 Criar o módulo de autenticação:

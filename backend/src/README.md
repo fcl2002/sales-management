@@ -1,6 +1,7 @@
 # Requisitos Funcionais do Sistema
 
 ## 📌 Fase 1: Módulo de Autenticação e Configuração Inicial
+- [ ] O sistema deve permitir o cadastro, a leitura, a atualizaçã criação de usuários
 - [ ] Criar tela de login e autenticação de usuários
 - [x] Diferenciação entre admin e usuário comum
 - [x] Estruturar o banco de dados inicial
@@ -157,6 +158,7 @@ Crie um arquivo `.env` na raiz do projeto e adicione as configurações do banco
 ```env
 DATABASE_URL=postgresql://usuario:senha@localhost:5432/nome_do_banco
 JWT_SECRET=chave_secreta
+JWT_EXPIRES_IN=1h
 PORT=3000
 ```
 
@@ -182,4 +184,30 @@ npm run start
 | `DELETE`| `/products/:id`          | Deletar um produto                        |
 | `POST`  | `/sales`                 | Registrar uma venda                       |
 | `GET`   | `/reports/sales`         | Gerar relatório de vendas                 |
---------------------------------------------|
+
+## 🛠️ Deploy na DigitalOcean
+
+Para subir a aplicação na DigitalOcean, siga os seguintes passos:
+
+### 1️⃣ Criar um Droplet e Configurar Banco de Dados
+- Configurar PostgreSQL no servidor.
+- Criar um banco de dados e atualizar a variável `DATABASE_URL`.
+
+### 2️⃣ Subir a Aplicação no Servidor
+```bash
+git clone https://github.com/seu-repositorio.git
+cd backend
+npm install
+npx prisma migrate deploy
+npm run start:prod
+```
+
+### 3️⃣ Configurar PM2 para Gerenciar a Aplicação
+```bash
+npm install -g pm2
+pm2 start dist/main.js --name backend
+pm2 save
+pm2 startup
+```
+
+Agora o backend estará rodando em produção! 🚀
