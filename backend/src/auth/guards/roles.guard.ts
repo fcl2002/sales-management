@@ -1,6 +1,6 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from '../enums/roles.enum';
+import { UserRole } from '../enums/roles.enum';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -19,15 +19,18 @@ export class RolesGuard implements CanActivate {
     const user = request.user;
 
     if(!user) {
-      console.log('user is undefined in request!');
-      return false;
+      console.log('[RolesGuard] User is undefined in request!');
+      throw new ForbiddenException('Acesso negado: usuário não autenticado.');
+    }
+
+    console.log(`[RolesGuard] Usuário autenticado: ${user.email}, Role: ${user.role}`);
+    console.log(`[RolesGuard] Permissões necessárias: ${requiredRoles}`);
+    
+    if (!requiredRoles.some((role) => user.role === role)) {
+      console.log('[RolesGuard] Access denied!');
+      throw new ForbiddenException('Acesso negado: você não tem permissão para acessar esta rota.');
     }
     
-    if(!requiredRoles.includes(user.role)) {
-      console.log('Acesso negado!');
-      return false;
-    }
-    
-    return user.role === requiredRoles;
+    return true;
   }
 }

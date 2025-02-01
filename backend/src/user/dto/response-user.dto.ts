@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Role } from '../../auth/enums/roles.enum';
+import { UserRole } from '../../auth/enums/roles.enum';
 
 export class UserResponseDto {
   @Expose()
@@ -9,7 +9,7 @@ export class UserResponseDto {
   email: string;
 
   @Expose()
-  role: Role;
+  role: UserRole;
 
   @Exclude()
   password?: string;

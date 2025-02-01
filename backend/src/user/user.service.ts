@@ -5,11 +5,11 @@ import { UserResponseDto } from './dto/response-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
+import { UserRole } from 'src/auth/enums/roles.enum';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
-
   constructor(private readonly prisma: PrismaService) {}
 
   async updateHashedRefreshToken(userId: number, hashedRefreshToken: string) {
@@ -22,7 +22,7 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     this.logger.log('[UserService] Criando um novo usuário...')
     
-    const { password, name, email } = createUserDto;
+    const { password, name, email, role } = createUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const emailExists = await this.prisma.user.findUnique({ where: { email }});
@@ -32,7 +32,7 @@ export class UserService {
     }
 
     const user = await this.prisma.user.create({
-      data: { name, email, password: hashedPassword },
+      data: { name, email, password: hashedPassword, role: role ?? UserRole.USER },
     });
 
     this.logger.log(`[UserService] Usuário criado com sucesso: ID ${user.id}`);
@@ -65,7 +65,7 @@ export class UserService {
     return users.map((user) => plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true }));
   }
   
-  async findByEmail(email: string) {
+  async findEmail(email: string) {
     return await this.prisma.user.findUnique({
       where: { email },
     });

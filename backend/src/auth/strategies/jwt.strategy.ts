@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import jwtConfig from '../config/jwt.config';
 import { JwtPayload } from '../types/jwtPayload';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -19,6 +19,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload) {
-    return { id: payload.sub };
+    console.log('[JwtStrategy] Payload recebido.', payload);
+    if (!payload.sub || !payload.email || !payload.role) {
+      throw new UnauthorizedException('Invalid JWT payload');
+    }
+    return { id: payload.sub, email: payload.email, role: payload.role };
   }
 }

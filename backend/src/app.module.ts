@@ -12,7 +12,6 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      
     }),
     UserModule, 
     PrismaModule, 

@@ -10,27 +10,31 @@ import { ConfigModule } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UserModule } from 'src/user/user.module';
-import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
+// import { RefreshJwtStrategy } from './strategies/refresh-jwt.strategy';
 import refreshJwtConfig from './config/refresh-jwt.config';
 import { RefreshJwtGuard } from './guards/refresh-jwt.guard';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
+    UserModule,
     PassportModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(refreshJwtConfig),
   ],
-  controllers: [AuthController],
   providers: [
+    PrismaService,
     UserService,
-    AuthService, 
-    PrismaService, 
-    JwtStrategy,
+    AuthService,
     LocalStrategy,
-    RefreshJwtStrategy,
-    RefreshJwtGuard,
+    JwtStrategy,
+    // RefreshJwtStrategy,
+    RefreshJwtGuard
   ],
+  controllers: [AuthController],
   exports: [AuthService],
 })
 export class AuthModule {}
