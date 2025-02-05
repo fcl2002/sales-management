@@ -3,7 +3,7 @@
 ## 📌 Requisitos Funcionais
 
 ### 🔹 **Autenticação e Controle de Acesso**
-- [X] **RF01:** O sistema deve permitir o cadastro, leitura, atualização e exclusão (CRUD) de usuários.
+- [X] **RF01:** O sistema deve permitir o cadastro, leitura, __atualização__ e exclusão (CRUD) de usuários.
 - [X] **RF02:** O sistema deve permitir a autenticação de usuários.
 - [X] **RF03:** O sistema deve diferenciar permissões entre usuários comuns e administradores.
 - [X] **RF04:** O sistema deve proteger rotas, garantindo que usuários sem credenciais válidas não acessem recursos restritos.

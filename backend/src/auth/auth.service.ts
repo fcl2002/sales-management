@@ -70,7 +70,8 @@ export class AuthService {
     const remainingTimeFormatted = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
     return {
-      email, role, iat, exp, 
+      email, 
+      role, 
       remainingTime: remainingTime > 0 ? remainingTime : 0,
       remaining_time_readable: remainingTime > 0 ? remainingTimeFormatted : 'Token expirado'
     };

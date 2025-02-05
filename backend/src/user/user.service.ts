@@ -26,6 +26,7 @@ export class UserService {
 
     const user = await this.prisma.user.create({
       data: { name, email, password: hashedPassword, role: role ?? UserRole.USER },
+      select: { id: true, name: true, email: true, role: true },
     });
 
     this.logger.log(`[UserService] Usuário criado com sucesso: ID ${user.id}`);
@@ -52,7 +53,7 @@ export class UserService {
     this.logger.log('[UserService] Buscando todos os usuários.');
 
     const users = await this.prisma.user.findMany({
-      select: { name: true, email: true, role: true },
+      select: { id: true, name: true, email: true, role: true },
     });
 
     return users.map((user) => plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true }));

@@ -3,6 +3,9 @@ import { UserRole } from '@prisma/client';
 
 export class UserResponseDto {
   @Expose()
+  id: number;
+
+  @Expose()
   name: string;
 
   @Expose()
