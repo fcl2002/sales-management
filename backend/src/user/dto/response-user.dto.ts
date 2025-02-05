@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { UserRole } from '../../auth/enums/roles.enum';
+import { UserRole } from '@prisma/client';
 
 export class UserResponseDto {
   @Expose()

@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Request, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Request, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { LocalAuthGuard } from './guards/local.guard';
-import { RefreshJwtGuard } from './guards/refresh-jwt.guard';
 import { LoginDto } from 'src/user/dto/login.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -17,15 +17,21 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
+  @Get('me')
+  async getProfile(@Req() request) {
+    console.log('[AuthController] Requisição recebida para /auth/me');
+    console.log('[AuthController] request.user:', request.user);
+
+    if (!request.user) {
+      return { message: 'Token inválido!' };
+    }
+    
+    return this.authService.getSessionInfo(request.user);
+  }
+
   @Post('logout')
   @UseGuards(LocalAuthGuard)
   async logout(@Request() request) {
     return request.logout();
   }
-
-  // @UseGuards(RefreshJwtGuard)
-  // @Post('refresh')
-  // async refresh(@Request() request) {
-  //   return this.authService.refreshToken(request.user.id);
-  // }
 }

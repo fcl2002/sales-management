@@ -20,9 +20,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload) {
     console.log('[JwtStrategy] Payload recebido.', payload);
+    
     if (!payload.sub || !payload.email || !payload.role) {
       throw new UnauthorizedException('Invalid JWT payload');
     }
-    return { id: payload.sub, email: payload.email, role: payload.role };
+
+    console.log(`[JwtStrategy] Usuário validado: ID ${payload.sub}, Email: ${payload.email}, Role: ${payload.role}`);
+
+    return { id: payload.sub, email: payload.email, role: payload.role, iat: payload.iat, exp: payload.exp };
   }
 }

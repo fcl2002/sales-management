@@ -5,19 +5,12 @@ import { UserResponseDto } from './dto/response-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
-import { UserRole } from 'src/auth/enums/roles.enum';
+import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
-  constructor(private readonly prisma: PrismaService) {}
-
-  async updateHashedRefreshToken(userId: number, hashedRefreshToken: string) {
-    return await this.prisma.user.update({ 
-      where: { id: userId }, 
-      data:  { hashedRefreshToken: hashedRefreshToken },
-    });
-  }
+  constructor(private readonly prisma: PrismaService) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     this.logger.log('[UserService] Criando um novo usuário...')
@@ -44,7 +37,7 @@ export class UserService {
 
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: { name: true, email: true, role: true, hashedRefreshToken: true },
+      select: { name: true, email: true, role: true },
     });
 
     if (!user) {
