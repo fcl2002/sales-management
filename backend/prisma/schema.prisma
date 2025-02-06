@@ -26,4 +26,31 @@ model User {
   role               UserRole @default(USER)
   createdAt          DateTime @default(now())
   updateAt           DateTime @updatedAt
+
+  shopId             Int?
+  shop               Shop?    @relation(fields: [shopId], references: [id], onDelete: SetNull)
 }
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  price       Float
+  stock       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  shopId Int
+  shop   Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+}
+
+model Shop {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  location String
+  createdAt DateTime @default(now())
+  
+  users    User[]
+  products Product[]
+}
+

@@ -6,50 +6,46 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { plainToInstance } from 'class-transformer';
 import { UserRole } from '@prisma/client';
+import { UserValidator } from './utils/user-validator';
+import { ShopService } from 'src/shop/shop.service';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userValidator: UserValidator,
+    private readonly shopService: ShopService,
+  ) { }
 
-  async createUser(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    this.logger.log('[UserService] Criando um novo usuário...')
-    
-    const { password, name, email, role } = createUserDto;
-    const hashedPassword = await bcrypt.hash(password, 10);
+  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+    this.logger.log('[UserService] Criando um novo usuário...');
 
-    const emailExists = await this.prisma.user.findUnique({ where: { email }});
-    if (emailExists) {
-      this.logger.warn(`[UserService] Tentativa de criar um usuário com email já existente: ${email}`);
-      throw new ConflictException('Este email já está em uso!');
+    await this.userValidator.validateEmailNotExists(createUserDto.email);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+    let shopId: number | null = null;
+    if(createUserDto.role === UserRole.USER) {
+      const shop = await this.shopService.createShopForUser(createUserDto.name);
+      shopId = shop.id;
     }
 
     const user = await this.prisma.user.create({
-      data: { name, email, password: hashedPassword, role: role ?? UserRole.USER },
-      select: { id: true, name: true, email: true, role: true },
+      data: { 
+        name: createUserDto.name, 
+        email: createUserDto.email, 
+        password: hashedPassword, 
+        role: createUserDto.role ?? UserRole.USER,
+        shopId: shopId
+      },
+      select: { id: true, name: true, email: true, role: true, shopId: true },
     });
 
-    this.logger.log(`[UserService] Usuário criado com sucesso: ID ${user.id}`);
+    this.logger.log(`[UserService] Usuário criado com sucesso: ID ${user.id}, Loja ID: ${shopId ?? 'Nenhuma'}`);
     return plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true });
   }
 
-  async findOne(id: number) {
-    this.logger.log(`[UserService] Buscando usuário com ID ${id}`);
-
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: { name: true, email: true, role: true },
-    });
-
-    if (!user) {
-      this.logger.warn(`[UserService] Usuário com ID ${id} não encontrado.`);
-      throw new NotFoundException('Usuário não encontrado.');
-    }
-
-    return user;
-  }
-
-  async findAllUsers(): Promise<UserResponseDto[]> {
+  async findAll(): Promise<UserResponseDto[]> {
     this.logger.log('[UserService] Buscando todos os usuários.');
 
     const users = await this.prisma.user.findMany({
@@ -58,35 +54,30 @@ export class UserService {
 
     return users.map((user) => plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true }));
   }
+
+  async findOne(id: number) {
+    this.logger.log(`[UserService] Buscando usuário com ID ${id}`);
+
+    const user = await this.userValidator.validateUserExists(id);
+    return { id: user.id, name: user.name, email: user.email, role: user.role };
+  }
   
   async findEmail(email: string) {
-    return await this.prisma.user.findUnique({
-      where: { email },
-    });
+    return await this.prisma.user.findUnique({ where: { email } });
   }
   
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
     this.logger.log(`[UserService] Atualizando usuário com ID ${id}`);
 
-    const { name, email } = updateUserDto;
+    const user = await this.userValidator.validateUserExists(id);
 
-    const userExists = await this.prisma.user.findUnique({ where: { id } });
-    if (!userExists) {
-      this.logger.warn(`[UserService] Tentativa de atualizar usuário inexistente com ID ${id}`);
-      throw new NotFoundException('Usuário não encontrado.');
-    }
-
-    if (email) {
-      const emailExists = await this.prisma.user.findUnique({ where: { email } });
-      if (emailExists && emailExists.id !== id) {
-        this.logger.warn(`[UserService] Tentativa de atualizar email para um já existente: ${email}`);
-        throw new ConflictException('Este email já está em uso!');
-      }
+    if(updateUserDto.email) {
+      await this.userValidator.validateEmailNotExists(updateUserDto.email, id);
     }
 
     const updatedUser = await this.prisma.user.update({
       where: { id },
-      data: { name, email },
+      data: { name: updateUserDto.name, email: updateUserDto.email },
     });
 
     this.logger.log(`[UserService] Usuário atualizado com sucesso: ID ${id}`);
@@ -96,12 +87,8 @@ export class UserService {
   async remove(id: number): Promise<UserResponseDto> {
     this.logger.log(`[UserService] Removendo usuário com ID ${id}`);
 
-    const userExists = await this.prisma.user.findUnique({ where: { id } });
-    if (!userExists) {
-      this.logger.warn(`[UserService] Tentativa de deletar usuário inexistente com ID ${id}`);
-      throw new NotFoundException('Usuário não encontrado.');
-    }
-
+    const user = await this.userValidator.validateUserExists(id);
+    
     const deletedUser = await this.prisma.user.delete({
       where: { id },
     });

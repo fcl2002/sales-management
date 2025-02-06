@@ -34,17 +34,17 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async createUser(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    return this.userService.createUser(createUserDto);
+    return this.userService.create(createUserDto);
   }
 
   @Get()
   @Roles(UserRole.ADMIN)
   async getAllUsers(): Promise<UserResponseDto[]> {
-    return this.userService.findAllUsers();
+    return this.userService.findAll();
   }
 
   @Get(':id')
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN, UserRole.USER)
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
