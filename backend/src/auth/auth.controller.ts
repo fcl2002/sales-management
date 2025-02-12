@@ -1,9 +1,18 @@
-import { Controller, Get, Post, Body, Request, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Request,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+  Req
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { LocalAuthGuard } from './guards/local.guard';
-import { LoginDto } from 'src/user/dto/login.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LoginDto } from 'src/user/dto/login-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +34,7 @@ export class AuthController {
     if (!request.user) {
       return { message: 'Token inválido!' };
     }
-    
+
     return this.authService.getSessionInfo(request.user);
   }
 

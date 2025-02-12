@@ -10,28 +10,27 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { ProductModule } from './product/product.module';
 import { ShopModule } from './shop/shop.module';
-
+import { GenericValidator } from './common/validators/generic-validator';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
     }),
-    UserModule, 
     PrismaModule, 
     AuthModule, 
+    UserModule, 
+    ShopModule,
     ProductModule, 
-    ShopModule],
+  ],
   controllers: [
     AppController
   ],
   providers: [
     AppService, 
     PrismaService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    GenericValidator,
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
   ],
 })
 export class AppModule {}

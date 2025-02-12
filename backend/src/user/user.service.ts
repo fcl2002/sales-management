@@ -2,22 +2,24 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/response-user.dto';
-import * as bcrypt from 'bcrypt';
-import { plainToInstance } from 'class-transformer';
 import { UserRole } from '@prisma/client';
 import { IUserRepository } from 'src/core/ports/IUserRepository';
 import { IUserValidator } from 'src/core/ports/IUserValidator';
 import { IShopService } from 'src/core/ports/IShopService';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
   
   constructor(
-    @Inject(IUserRepository) private readonly userRepository: IUserRepository,
-    @Inject(IUserValidator)  private readonly userValidator: IUserValidator,
-    @Inject(IShopService)    private readonly shopService: IShopService,
-  ) {}
+    @Inject(IUserRepository) 
+    private readonly userRepository: IUserRepository,
+    @Inject(IUserValidator)  
+    private readonly userValidator: IUserValidator,
+    @Inject(IShopService)    
+    private readonly shopService: IShopService,
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     this.logger.log('[UserService] Criando um novo usuário...');
@@ -35,8 +37,7 @@ export class UserService {
 
   async findAll(): Promise<UserResponseDto[]> {
     this.logger.log('[UserService] Buscando todos os usuários.');
-    const users = await this.userRepository.findAll();
-    return users.map((user) => plainToInstance(UserResponseDto, user, { excludeExtraneousValues: true }));
+    return await this.userRepository.findAll();
   }
 
   async findOne(id: number) {

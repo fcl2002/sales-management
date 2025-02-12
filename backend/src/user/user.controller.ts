@@ -12,7 +12,7 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
-  Request,
+  Version
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -29,6 +29,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @Version('1')
   @Roles(UserRole.ADMIN)
   @UseGuards(RolesGuard)
   @HttpCode(HttpStatus.CREATED)
@@ -38,18 +39,21 @@ export class UserController {
   }
 
   @Get()
+  @Version('1')
   @Roles(UserRole.ADMIN)
   async getAllUsers(): Promise<UserResponseDto[]> {
     return this.userService.findAll();
   }
 
   @Get(':id')
+  @Version('1')
   @Roles(UserRole.ADMIN, UserRole.USER)
   async getUserById(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
+  @Version('1')
   @HttpCode(HttpStatus.OK)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   async update(
@@ -60,6 +64,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Version('1')
   @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {

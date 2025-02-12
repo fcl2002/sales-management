@@ -3,18 +3,19 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { PrismaUserRepository } from '../infrastructure/repositories/PrismaUserRepository';
 import { IUserRepository } from '../core/ports/IUserRepository';
-import { IShopService } from '../core/ports/IShopService';
 import { IUserValidator } from 'src/core/ports/IUserValidator';
-import { UserValidator } from './utils/user-validator';
-import { ShopService } from 'src/shop/shop.service';
+import { UserValidator } from '../common/validators/user-validator';
+import { GenericValidator } from 'src/common/validators/generic-validator';
+import { ShopModule } from 'src/shop/shop.module';
 
 @Module({
+  imports: [ShopModule],
   controllers: [UserController],
   providers: [
     UserService,
+    GenericValidator,
     { provide: IUserRepository, useClass: PrismaUserRepository },
     { provide: IUserValidator, useClass: UserValidator },
-    { provide: IShopService, useClass: ShopService },
   ],
   exports: [UserService],
 })

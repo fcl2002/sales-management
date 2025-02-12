@@ -1,11 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { ShopController } from './shop.controller';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaShopRepository } from 'src/infrastructure/repositories/PrismaShopRepository';
+import { IShopService } from 'src/core/ports/IShopService';
+import { GenericValidator } from 'src/common/validators/generic-validator';
+import { IShopRepository } from 'src/core/ports/IShopRepository';
 
 @Module({
   controllers: [ShopController],
-  providers: [ShopService, PrismaService],
-  exports: [ShopService],
+  providers: [
+    ShopService,
+    GenericValidator,
+    { provide: IShopRepository, useClass: PrismaShopRepository },
+    { provide: IShopService, useClass: ShopService },
+  ],
+  exports: [IShopService],
 })
 export class ShopModule {}

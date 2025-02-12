@@ -142,7 +142,11 @@ $ bcrypt-cli hash minhaSenha123
 ## Gerar chave de 32 bits
 $ openssl rand -hex 32
 
+# Configuração do ambiente de testes
+$ npm install --save-dev jest @types/jest @nestjs/testing
+
 ```
+
 ### 1️⃣ Instalar Dependências
 ```bash
 npm install
@@ -152,8 +156,8 @@ Crie um arquivo `.env` na raiz do projeto e adicione as configurações do banco
 ```env
 DATABASE_URL=postgresql://usuario:senha@localhost:5432/nome_do_banco
 JWT_SECRET=chave_secreta
-JWT_EXPIRES_IN=1h
-PORT=3000
+JWT_EXPIRES_IN=tempo
+PORT=porta
 ```
 
 ### 3️⃣ Rodar Migrações do Banco
