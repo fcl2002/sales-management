@@ -1,10 +1,10 @@
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtPayload } from './types/jwtPayload';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from 'src/user/dto/login-user.dto';
 import { UserRole } from '@prisma/client';
+import { IUserService } from 'src/core/ports/IUserService';
 
 @Injectable()
 export class AuthService {
@@ -12,34 +12,32 @@ export class AuthService {
 
   constructor(
     private readonly jwtService: JwtService,
-    private readonly userService: UserService,
+    @Inject(IUserService)
+    private readonly userService: IUserService,
   ) {}
 
-  async login(
-    loginDto: LoginDto,
-  ): Promise<{ id: number; access_token: string }> {
+  async login(loginDto: LoginDto): Promise<{ id: number; access_token: string }> {
+    
     const user = await this.validateUser(loginDto.email, loginDto.password);
-
-    this.logger.log(`[AuthService] Login bem sucedido para: ${user.email}`);
-
+    this.logger.log(`[AuthService] Login bem sucedido para ${user.email}`);
     return this.generateTokens(user.id, user.email, user.role);
   }
 
   async validateUser(email: string, pass: string) {
+    
     const user = await this.userService.findEmail(email);
-
     if (!user) {
-      this.logger.log('[AuthService} User not found!');
-      throw new UnauthorizedException('Invalid credencials!');
+      this.logger.warn(`[AuthService} Usuário não encontrado.`);
+      throw new UnauthorizedException('Credenciais inválidas.');
     }
 
     const isPasswordMatch = await bcrypt.compare(pass, user.password);
     if (!isPasswordMatch) {
-      this.logger.log(`[AuthService} Password does not match!`);
-      throw new UnauthorizedException('Invalid credencials!');
+      this.logger.warn(`[AuthService} Senha invállida.`);
+      throw new UnauthorizedException('Credenciais inválidas.');
     }
 
-    this.logger.log(`[AuthService] Usuário autenticado: ${email}`);
+    this.logger.log(`[AuthService] Usuário autenticado ${email}`);
     const { password, ...result } = user;
     return result;
   }
@@ -63,14 +61,11 @@ export class AuthService {
     const currentTime = Math.floor(Date.now() / 1000);
     const remainingTime = exp - currentTime;
 
-    this.logger.log(
-      `[AuthService] Tempo restante de sessão para ${email}: ${remainingTime} segundos`,
-    );
+    this.logger.log(`[AuthService] Tempo de sessão para ${email}: ${remainingTime} s`);
 
     const hours = Math.floor(remainingTime / 3600);
     const minutes = Math.floor((remainingTime % 3600) / 60);
     const seconds = remainingTime % 60;
-
     const remainingTimeFormatted = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 
     return {

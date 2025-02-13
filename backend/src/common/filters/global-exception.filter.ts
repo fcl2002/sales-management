@@ -20,9 +20,9 @@ import { Request, Response } from 'express';
           ? exceptionResponse
           : (exceptionResponse as any).message;
       }
-
       else if (exception instanceof Error) {
         this.logger.error(`❌ Erro inesperado: ${exception.message}`, exception.stack);
+        message = exception.message || 'Erro desconhecido';
       }
   
       const errorResponse = {

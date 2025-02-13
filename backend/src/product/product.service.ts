@@ -11,8 +11,10 @@ export class ProductService {
   private readonly logger = new Logger(ProductService.name);
 
   constructor(
-    @Inject(IProductRepository) private readonly productRepository: IProductRepository,
-    @Inject(IProductValidator)  private readonly productValidator: IProductValidator,
+    @Inject(IProductRepository) 
+    private readonly productRepository: IProductRepository,
+    @Inject(IProductValidator)  
+    private readonly productValidator: IProductValidator,
   ) { }
 
   async create(createProductDto: CreateProductDto, user: any): Promise<ProductResponseDto> {

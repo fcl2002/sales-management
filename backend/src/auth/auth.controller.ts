@@ -28,9 +28,7 @@ export class AuthController {
 
   @Get('me')
   async getProfile(@Req() request) {
-    console.log('[AuthController] Requisição recebida para /auth/me');
-    console.log('[AuthController] request.user:', request.user);
-
+    
     if (!request.user) {
       return { message: 'Token inválido!' };
     }

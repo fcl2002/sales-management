@@ -19,7 +19,7 @@ export class UserService {
     private readonly userValidator: IUserValidator,
     @Inject(IShopService)    
     private readonly shopService: IShopService,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
     this.logger.log('[UserService] Criando um novo usuário...');

@@ -12,7 +12,8 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
-  Version
+  Version,
+  Inject
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,11 +23,15 @@ import { UserRole } from '@prisma/client';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { IUserService } from 'src/core/ports/IUserService';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    @Inject(IUserService)
+    private readonly userService: IUserService
+  ) {}
 
   @Post()
   @Version('1')

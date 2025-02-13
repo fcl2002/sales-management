@@ -6,6 +6,7 @@ import { IProductValidator } from 'src/core/ports/IProductValidator';
 import { ProductValidator } from '../common/validators/product-validator';
 import { ProductController } from './product.controller';
 import { GenericValidator } from 'src/common/validators/generic-validator';
+import { IProductService } from 'src/core/ports/IProductService';
 
 @Module({
   controllers: [ProductController],
@@ -14,7 +15,8 @@ import { GenericValidator } from 'src/common/validators/generic-validator';
     GenericValidator, 
     { provide: IProductRepository, useClass: PrismaProductRepository },
     { provide: IProductValidator, useClass: ProductValidator },
+    { provide: IProductService, useClass: ProductService },
   ],
-  exports: [ProductService],
+  exports: [IProductService],
 })
 export class ProductModule {}

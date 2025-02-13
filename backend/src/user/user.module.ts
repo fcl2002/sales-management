@@ -7,16 +7,17 @@ import { IUserValidator } from 'src/core/ports/IUserValidator';
 import { UserValidator } from '../common/validators/user-validator';
 import { GenericValidator } from 'src/common/validators/generic-validator';
 import { ShopModule } from 'src/shop/shop.module';
+import { IUserService } from 'src/core/ports/IUserService';
 
 @Module({
   imports: [ShopModule],
   controllers: [UserController],
   providers: [
-    UserService,
     GenericValidator,
     { provide: IUserRepository, useClass: PrismaUserRepository },
     { provide: IUserValidator, useClass: UserValidator },
+    { provide: IUserService, useClass: UserService },
   ],
-  exports: [UserService],
+  exports: [IUserService],
 })
 export class UserModule {}

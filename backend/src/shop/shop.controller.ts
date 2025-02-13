@@ -1,9 +1,12 @@
-import { Controller, Get, Param, ParseIntPipe, Request, Version } from '@nestjs/common';
-import { ShopService } from './shop.service';
+import { Controller, Get, Inject, Param, ParseIntPipe, Request, Version } from '@nestjs/common';
+import { IShopService } from 'src/core/ports/IShopService';
 
 @Controller('shops')
 export class ShopController {
-  constructor(private readonly shopService: ShopService) {}
+  constructor(
+    @Inject(IShopService)
+    private readonly shopService: IShopService
+  ) {}
 
   @Get()
   @Version('1')
