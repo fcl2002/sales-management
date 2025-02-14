@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { IShopRepository } from 'src/core/ports/IShopRepository';
+import { IShopRepository } from 'src/core/ports/shop/IShopRepository';
 
 @Injectable()
 export class PrismaShopRepository implements IShopRepository {

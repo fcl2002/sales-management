@@ -1,6 +1,6 @@
-import { CreateUserDto } from '../../user/dto/create-user.dto';
-import { UpdateUserDto } from '../../user/dto/update-user.dto';
-import { UserResponseDto } from '../../user/dto/response-user.dto';
+import { CreateUserDto } from '../../../user/dto/create-user.dto';
+import { UpdateUserDto } from '../../../user/dto/update-user.dto';
+import { UserResponseDto } from '../../../user/dto/response-user.dto';
 
 export const IUserRepository = Symbol('IUserRepository');
 

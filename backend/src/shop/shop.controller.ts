@@ -1,11 +1,10 @@
 import { Controller, Get, Inject, Param, ParseIntPipe, Request, Version } from '@nestjs/common';
-import { IShopService } from 'src/core/ports/IShopService';
+import { IShopService } from 'src/core/ports/shop/IShopService';
 
 @Controller('shops')
 export class ShopController {
   constructor(
-    @Inject(IShopService)
-    private readonly shopService: IShopService
+    @Inject(IShopService) private readonly shopService: IShopService
   ) {}
 
   @Get()

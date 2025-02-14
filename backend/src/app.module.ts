@@ -13,18 +13,12 @@ import { ShopModule } from './shop/shop.module';
 import { GenericValidator } from './common/validators/generic-validator';
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      expandVariables: true,
-    }),
+    ConfigModule.forRoot({ isGlobal: true, expandVariables: true }),
     PrismaModule, 
     AuthModule, 
     UserModule, 
     ShopModule,
     ProductModule, 
-  ],
-  controllers: [
-    AppController
   ],
   providers: [
     AppService, 
@@ -32,5 +26,6 @@ import { GenericValidator } from './common/validators/generic-validator';
     GenericValidator,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
   ],
+  controllers: [AppController]
 })
 export class AppModule {}

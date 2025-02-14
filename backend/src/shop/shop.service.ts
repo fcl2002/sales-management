@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
-import { IShopRepository } from 'src/core/ports/IShopRepository';
+import { IShopRepository } from 'src/core/ports/shop/IShopRepository';
 
 @Injectable()
 export class ShopService {

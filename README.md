@@ -118,9 +118,9 @@ $ npm install @nestjs/cli
 $ nest new project-name
 
 # Prisma
-$ npm install prisma --save-dev
+$ npm i prisma --save-dev
 $ npx prisma init
-$ npm install @prisma/client
+$ npm i @prisma/client
 $ npx prisma migrate dev --name init
 $ npx prisma generate
 
@@ -143,7 +143,9 @@ $ bcrypt-cli hash minhaSenha123
 $ openssl rand -hex 32
 
 # Configuração do ambiente de testes
-$ npm install --save-dev jest @types/jest @nestjs/testing
+$ npm i -D jest @types/jest @nestjs/testing
+$ npm i -D tsconfig-paths
+
 
 ```
 

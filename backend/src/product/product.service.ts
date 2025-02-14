@@ -2,8 +2,8 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { UserRole } from '@prisma/client';
-import { IProductRepository } from 'src/core/ports/IProductRepository';
-import { IProductValidator } from 'src/core/ports/IProductValidator';
+import { IProductRepository } from 'src/core/ports/product/IProductRepository';
+import { IProductValidator } from 'src/core/ports/product/IProductValidator';
 import { ProductResponseDto } from './dto/response-product.dto';
 
 @Injectable()
@@ -11,14 +11,12 @@ export class ProductService {
   private readonly logger = new Logger(ProductService.name);
 
   constructor(
-    @Inject(IProductRepository) 
-    private readonly productRepository: IProductRepository,
-    @Inject(IProductValidator)  
-    private readonly productValidator: IProductValidator,
+    @Inject(IProductRepository) private readonly productRepository: IProductRepository,
+    @Inject(IProductValidator)  private readonly productValidator: IProductValidator,
   ) { }
 
   async create(createProductDto: CreateProductDto, user: any): Promise<ProductResponseDto> {
-    this.logger.log('[ProductService] Criando um novo produto...');
+    this.logger.log('[ProductService] Criando um novo produto.');
     this.productValidator.validateAdminAccess(user, 'criar');
     
     return this.productRepository.create(createProductDto, user);

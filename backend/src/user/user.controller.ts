@@ -15,7 +15,6 @@ import {
   Version,
   Inject
 } from '@nestjs/common';
-import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/response-user.dto';
@@ -23,14 +22,13 @@ import { UserRole } from '@prisma/client';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { IUserService } from 'src/core/ports/IUserService';
+import { IUserService } from 'src/core/ports/user/IUserService';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
   constructor(
-    @Inject(IUserService)
-    private readonly userService: IUserService
+    @Inject(IUserService) private readonly userService: IUserService
   ) {}
 
   @Post()

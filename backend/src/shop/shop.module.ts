@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { ShopController } from './shop.controller';
 import { PrismaShopRepository } from 'src/infrastructure/repositories/PrismaShopRepository';
-import { IShopService } from 'src/core/ports/IShopService';
+import { IShopService } from 'src/core/ports/shop/IShopService';
 import { GenericValidator } from 'src/common/validators/generic-validator';
-import { IShopRepository } from 'src/core/ports/IShopRepository';
-import { IShopValidator } from 'src/core/ports/IShopValidator';
+import { IShopRepository } from 'src/core/ports/shop/IShopRepository';
+import { IShopValidator } from 'src/core/ports/shop/IShopValidator';
 import { ShopValidator } from 'src/common/validators/shop-validator';
 
 @Module({

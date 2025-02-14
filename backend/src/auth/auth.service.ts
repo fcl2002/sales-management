@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from 'src/user/dto/login-user.dto';
 import { UserRole } from '@prisma/client';
-import { IUserService } from 'src/core/ports/IUserService';
+import { IUserService } from 'src/core/ports/user/IUserService';
 
 @Injectable()
 export class AuthService {
@@ -33,11 +33,11 @@ export class AuthService {
 
     const isPasswordMatch = await bcrypt.compare(pass, user.password);
     if (!isPasswordMatch) {
-      this.logger.warn(`[AuthService} Senha invállida.`);
+      this.logger.warn(`[AuthService} Senha inválida.`);
       throw new UnauthorizedException('Credenciais inválidas.');
     }
 
-    this.logger.log(`[AuthService] Usuário autenticado ${email}`);
+    this.logger.log(`[AuthService] Usuário autenticado: ${email}`);
     const { password, ...result } = user;
     return result;
   }
@@ -45,7 +45,7 @@ export class AuthService {
   async generateTokens(id: number, email: string, role: UserRole) {
     const payload: JwtPayload = { sub: id, email, role };
 
-    this.logger.log(`Gerando token JWT para: ${email}`);
+    this.logger.log(`[AuthService] Gerando token JWT para: ${email}`);
     const access_token = await this.jwtService.signAsync(payload);
 
     return { id, access_token };

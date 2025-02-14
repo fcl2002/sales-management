@@ -3,9 +3,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/response-user.dto';
 import { UserRole } from '@prisma/client';
-import { IUserRepository } from 'src/core/ports/IUserRepository';
-import { IUserValidator } from 'src/core/ports/IUserValidator';
-import { IShopService } from 'src/core/ports/IShopService';
+import { IUserRepository } from 'src/core/ports/user/IUserRepository';
+import { IUserValidator } from 'src/core/ports/user/IUserValidator';
+import { IShopService } from 'src/core/ports/shop/IShopService';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -13,16 +13,13 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
   
   constructor(
-    @Inject(IUserRepository) 
-    private readonly userRepository: IUserRepository,
-    @Inject(IUserValidator)  
-    private readonly userValidator: IUserValidator,
-    @Inject(IShopService)    
-    private readonly shopService: IShopService,
+    @Inject(IUserRepository) private readonly userRepository: IUserRepository,
+    @Inject(IUserValidator)  private readonly userValidator: IUserValidator,
+    @Inject(IShopService)    private readonly shopService: IShopService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    this.logger.log('[UserService] Criando um novo usuário...');
+    this.logger.log('[UserService] Criando um novo usuário.');
     await this.userValidator.validateEmailNotExists(createUserDto.email);
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
@@ -36,7 +33,7 @@ export class UserService {
   }
 
   async findAll(): Promise<UserResponseDto[]> {
-    this.logger.log('[UserService] Buscando todos os usuários.');
+    this.logger.log(`[UserService] Buscando todos os usuários.`);
     return await this.userRepository.findAll();
   }
 

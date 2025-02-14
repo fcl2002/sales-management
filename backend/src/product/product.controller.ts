@@ -5,14 +5,13 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
-import { IProductService } from 'src/core/ports/IProductService';
+import { IProductService } from 'src/core/ports/product/IProductService';
 
 @UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductController {
   constructor(
-    @Inject(IProductService)
-    private readonly productService: IProductService
+    @Inject(IProductService) private readonly productService: IProductService
   ) {}
 
   @Post()
