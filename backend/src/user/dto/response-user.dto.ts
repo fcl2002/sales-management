@@ -15,7 +15,7 @@ export class UserResponseDto {
   role: UserRole;
   
   @Expose()
-  shopId: number;
+  shopId: number | null;
 
   @Exclude()
   password?: string;
